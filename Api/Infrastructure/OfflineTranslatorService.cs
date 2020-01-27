@@ -46,6 +46,11 @@ namespace MyMostUsedWords.Infrastructure
             }
 
             translation = await _googleTranslatorService.Translate(word, sourceLang, targetLang);
+            if (string.IsNullOrEmpty(translation))
+            {
+                return string.Empty;
+            }
+
             UpdateDictionary(word, translation, dictionary, dictionaryName);
 
             _dictionaries[dictionaryName] = dictionary;
