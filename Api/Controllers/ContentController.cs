@@ -7,6 +7,8 @@ using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using System.IO;
+using MyMostUsedWords.Services;
+using System.Text;
 
 namespace MyMostUsedWords.Controllers
 {
@@ -14,14 +16,11 @@ namespace MyMostUsedWords.Controllers
     [Route("[controller]")]
     public class ContentController: Controller
     {
-        const string sourceLang = "pt";
-        const string targetLang = "en";
-        
-        HttpClient client;
+        MostUsedWordsService _mostUsedWordsService;
 
-        public ContentController()
+        public ContentController(MostUsedWordsService mostUsedWordsService)
         {
-            client = new HttpClient();
+            _mostUsedWordsService = mostUsedWordsService;
         }
 
         [HttpPost]
@@ -30,56 +29,20 @@ namespace MyMostUsedWords.Controllers
         {
             var reader = new StreamReader(HttpContext.Request.Body);
             var text = await reader.ReadToEndAsync();
-
-            var wordsCountList = new List<WordCount>();
-            var wordsInText = text.Split(' ');
-
-            foreach (var word in wordsInText)
-            {
-                var wordCount = wordsCountList.FirstOrDefault(w => w.Word == word);
-                if (wordCount == null)
-                {
-                    var translation = "";// await Translate(word);
-                    wordsCountList.Add(new WordCount(word, translation, 1));
-                }
-                else
-                {
-                    wordCount.Count++;
-                }
-            }
-
-            return GetResponse(wordsCountList.OrderByDescending(w => w.Count));
+            
+            return GetResponse(_mostUsedWordsService.Get(text));
 
             //return wordsCountList.OrderByDescending(w => w.Count);
         }
 
-        public async Task<string> Translate(string word)
+        public string GetResponse(IList<WordCount> words)
         {
-            var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLang}&tl={targetLang}&dt=t&q={word}";
-            var response = await client.GetAsync(url);
-            
-            if (response.StatusCode == System.Net.HttpStatusCode.OK)
-            {
-                var translation = await response.Content.ReadAsStringAsync();
-                translation = translation.Substring(translation.IndexOf("\""));
-                translation = translation.Substring(0, translation.IndexOf("\""));
-
-                return translation;
+            var result = new StringBuilder();
+            for(var i = 1; i <= words.Count; i++)
+            {   
+                result.Append($"{i}. {words[i].ToString()}\n");
             }
-            return string.Empty;
-        }
-
-        public string GetResponse(IEnumerable<WordCount> words)
-        {
-            var result = "";
-            foreach(var word in words)
-            {
-                result += $"{word.Word},{word.Count}\n";
-            }
-            return result;
+            return result.ToString();
         }
     }    
 }
-
-//https://translate.googleapis.com/translate_a/single?client=gtx&sl=" + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + encodeURI(sourceText)
-//https://translate.googleapis.com/translate_a/single?client=gtx&sl=pt&tl=en&dt=t&q=Olá

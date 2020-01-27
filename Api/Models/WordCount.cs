@@ -12,5 +12,10 @@
             Translation = translation;
             Count = count;
         }
+
+        public override string ToString()
+        {
+            return $"{Word} ({Count}): {Translation}";
+        }
     }
 }
