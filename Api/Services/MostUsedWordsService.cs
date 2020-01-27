@@ -7,8 +7,8 @@ namespace MyMostUsedWords.Services
 {
     public class MostUsedWordsService
     {
-        const string sourceLang = "pt";
-        const string targetLang = "en";
+        const string sourceLang = "en";
+        const string targetLang = "pt";
 
         ITranslator _translatorService;
 
@@ -24,15 +24,15 @@ namespace MyMostUsedWords.Services
 
             foreach (var word in wordsInText)
             {
-                var wordCount = wordsCountList.FirstOrDefault(w => w.Word == word);
+                var wordCount = wordsCountList.FirstOrDefault(w => w.Description == word);
                 if (wordCount == null)
                 {
                     var translation = _translatorService.Translate(word, sourceLang, targetLang).Result;
-                    wordsCountList.Add(new WordCount(word, translation, 1));
+                    wordsCountList.Add(new WordCount(word, translation));
                 }
                 else
                 {
-                    wordCount.Count++;
+                    wordCount.Increment();
                 }
             }
 

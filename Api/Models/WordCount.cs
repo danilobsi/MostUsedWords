@@ -2,20 +2,25 @@
 {
     public class WordCount
     {
-        public string Word { get; private set; }
-        public string Translation { get; set; }
-        public int Count { get; set; }
+        public string Description { get; protected set; }
+        public string Translation { get; protected set; }
+        public int Count { get; private set; }
 
-        public WordCount(string word, string translation, int count)
+        public WordCount(string description, string translation)
         {
-            Word = word;
+            Description = description;
             Translation = translation;
-            Count = count;
+            Count = 1;
+        }
+
+        public void Increment()
+        {
+            Count++;
         }
 
         public override string ToString()
         {
-            return $"{Word} ({Count}): {Translation}";
+            return $"{Description} ({Count}): {Translation}";
         }
     }
 }

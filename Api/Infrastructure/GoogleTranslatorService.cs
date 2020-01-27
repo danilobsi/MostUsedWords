@@ -26,7 +26,7 @@ namespace MyMostUsedWords.Infrastructure
             if (response.StatusCode == HttpStatusCode.OK)
             {
                 var translation = await response.Content.ReadAsStringAsync();
-                translation = translation.Substring(translation.IndexOf("\""));
+                translation = translation.Substring(translation.IndexOf("\"") + 1);
                 translation = translation.Substring(0, translation.IndexOf("\""));
 
                 return translation;

@@ -38,9 +38,9 @@ namespace MyMostUsedWords.Controllers
         public string GetResponse(IList<WordCount> words)
         {
             var result = new StringBuilder();
-            for(var i = 1; i <= words.Count; i++)
+            for(var i = 0; i < words.Count; i++)
             {   
-                result.Append($"{i}. {words[i].ToString()}\n");
+                result.Append($"{i + 1}. {words[i].ToString()}\n");
             }
             return result.ToString();
         }

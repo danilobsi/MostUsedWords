@@ -29,6 +29,7 @@ namespace WebApplication1
         {
             services.AddSingleton<MostUsedWordsService>();
             services.AddSingleton<ITranslator, OfflineTranslatorService>();
+            services.AddSingleton<GoogleTranslatorService>();
             services.AddControllers();
         }
 
