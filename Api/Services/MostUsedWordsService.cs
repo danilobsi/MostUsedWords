@@ -8,7 +8,7 @@ namespace MyMostUsedWords.Services
     public class MostUsedWordsService
     {
         const string sourceLang = "en";
-        const string targetLang = "pt";
+        const string targetLang = "nl";
 
         ITranslator _translatorService;
 
