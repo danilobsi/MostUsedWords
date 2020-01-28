@@ -15,10 +15,16 @@ namespace MyMostUsedWords.Infrastructure
 
         public OfflineTranslatorService(GoogleTranslatorService googleTranslatorService)
         {
-            var fileNames = Directory.GetFiles(_dictionariesPath);
-            
-            _dictionaries = new Dictionary<string, Dictionary<string, string>>(fileNames.Length);
             _googleTranslatorService = googleTranslatorService;
+
+            if (!Directory.Exists(_dictionariesPath))
+            {
+                _dictionaries = new Dictionary<string, Dictionary<string, string>>();
+                return;
+            }
+
+            var fileNames = Directory.GetFiles(_dictionariesPath);
+            _dictionaries = new Dictionary<string, Dictionary<string, string>>(fileNames.Length);
 
             foreach (var file in fileNames)
             {
@@ -30,6 +36,11 @@ namespace MyMostUsedWords.Infrastructure
 
         public async Task<string> Translate(string word, string sourceLang, string targetLang)
         {
+            if (string.IsNullOrEmpty(word))
+            {
+                return string.Empty;
+            }
+
             string translation;
             Dictionary<string, string> dictionary;
             var dictionaryName = sourceLang + targetLang;
