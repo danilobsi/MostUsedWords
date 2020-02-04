@@ -20,10 +20,13 @@ namespace MyMostUsedWords.Services
         public List<WordCount> Get(string text)
         {
             var wordsCountList = new List<WordCount>();
-            var wordsInText = text.Split(' ');
+            var wordsInText = text.Split(' ', '\r', '\n');
 
             foreach (var word in wordsInText)
             {
+                if (string.IsNullOrWhiteSpace(word))
+                    continue;
+
                 var wordCount = wordsCountList.FirstOrDefault(w => w.Description == word);
                 if (wordCount == null)
                 {
@@ -31,9 +34,7 @@ namespace MyMostUsedWords.Services
                     wordsCountList.Add(new WordCount(word, translation));
                 }
                 else
-                {
                     wordCount.Increment();
-                }
             }
 
             return wordsCountList.OrderByDescending(w => w.Count).ToList();
