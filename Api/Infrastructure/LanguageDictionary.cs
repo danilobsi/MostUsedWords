@@ -63,7 +63,7 @@ namespace MyMostUsedWords.Infrastructure
 
         public Task Save()
         {
-            using (var writer = File.CreateText("custom"))
+            using (var writer = File.CreateText(Filename))
             {
                 foreach (var keyName in Keys)
                     writer.WriteLine($"{keyName}:{this[keyName]}");
