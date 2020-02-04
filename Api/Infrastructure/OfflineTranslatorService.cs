@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Utf8Json;
 
 namespace MyMostUsedWords.Infrastructure
 {
@@ -11,7 +10,7 @@ namespace MyMostUsedWords.Infrastructure
         const string _dictionariesPath = "Infrastructure/Dictionaries/";
 
         GoogleTranslatorService _googleTranslatorService;
-        Dictionary<string, Dictionary<string, string>> _dictionaries;
+        Dictionary<string, LanguageDictionary> _dictionaries;
 
         public OfflineTranslatorService(GoogleTranslatorService googleTranslatorService)
         {
@@ -19,39 +18,39 @@ namespace MyMostUsedWords.Infrastructure
 
             if (!Directory.Exists(_dictionariesPath))
             {
-                _dictionaries = new Dictionary<string, Dictionary<string, string>>();
+                _dictionaries = new Dictionary<string, LanguageDictionary>();
                 return;
             }
 
             var fileNames = Directory.GetFiles(_dictionariesPath);
-            _dictionaries = new Dictionary<string, Dictionary<string, string>>(fileNames.Length);
+            _dictionaries = new Dictionary<string, LanguageDictionary>(fileNames.Length);
 
             foreach (var file in fileNames)
             {
                 var language = file.AsSpan().Slice(file.LastIndexOf('/') + 1);
-                var dictionary = JsonSerializer.Deserialize<Dictionary<string, string>>(File.ReadAllText(file));
-                _dictionaries.Add(language.ToString(), dictionary);
+                var dictionary = LanguageDictionary.FromFile(file);
+
+                if (dictionary.IsSuccess)
+                    _dictionaries.Add(language.ToString(), dictionary.Value);
             }
         }
 
         public async Task<string> Translate(string word, string sourceLang, string targetLang)
         {
-            if (string.IsNullOrEmpty(word))
+            if (string.IsNullOrWhiteSpace(word))
             {
                 return string.Empty;
             }
 
-            string translation;
-            Dictionary<string, string> dictionary;
             var dictionaryName = sourceLang + targetLang;
 
-            if (!_dictionaries.TryGetValue(dictionaryName, out dictionary))
+            if (!_dictionaries.TryGetValue(dictionaryName, out var dictionary))
             {
-                dictionary = new Dictionary<string, string>(1);
+                dictionary = LanguageDictionary.New(_dictionariesPath + dictionaryName);
                 _dictionaries.Add(dictionaryName, dictionary);
             }
 
-            if (dictionary.TryGetValue(word, out translation))
+            if (dictionary.TryGetValue(word, out var translation))
             {
                 return translation;
             }
@@ -62,20 +61,12 @@ namespace MyMostUsedWords.Infrastructure
                 return string.Empty;
             }
 
-            UpdateDictionary(word, translation, dictionary, dictionaryName);
+            dictionary.Add(word, translation);
+            dictionary.Save();
 
             _dictionaries[dictionaryName] = dictionary;
 
             return translation;
-        }
-
-        private static void UpdateDictionary(string word, string translation, Dictionary<string, string> dictionary, string dictionaryName)
-        {
-            dictionary.Add(word, translation);
-            using (var writer = File.CreateText(_dictionariesPath + dictionaryName))
-            {
-                writer.Write(JsonSerializer.ToJsonString(dictionary));
-            }
         }
     }
 }
