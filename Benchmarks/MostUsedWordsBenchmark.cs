@@ -2,7 +2,9 @@
 using BenchmarkDotNet.Order;
 using Moq;
 using MyMostUsedWords.Infrastructure;
+using MyMostUsedWords.Models;
 using MyMostUsedWords.Services;
+using System.Collections.Generic;
 
 namespace Benchmarks
 {
@@ -22,10 +24,10 @@ namespace Benchmarks
         }
 
         [Benchmark]
-        public void Get()
+        public List<WordCount> Get()
         {
             var text = "My text to test. It will repeat the text word";
-            var result = sut.Get(text);
+            return sut.Get(text);
         }
     }
 }
