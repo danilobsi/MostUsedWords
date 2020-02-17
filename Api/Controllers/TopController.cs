@@ -11,11 +11,11 @@ namespace MyMostUsedWords.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class ContentController: Controller
+    public class TopController: Controller
     {
         MostUsedWordsService _mostUsedWordsService;
 
-        public ContentController(MostUsedWordsService mostUsedWordsService)
+        public TopController(MostUsedWordsService mostUsedWordsService)
         {
             _mostUsedWordsService = mostUsedWordsService;
         }
@@ -27,6 +27,15 @@ namespace MyMostUsedWords.Controllers
             var text = await reader.ReadToEndAsync();
             
             return GetResponse(_mostUsedWordsService.Get(text));
+        }
+
+        [HttpPost("{src}/{target}")]
+        public async Task<string> Post(string src, string target)
+        {
+            var reader = new StreamReader(HttpContext.Request.Body);
+            var text = await reader.ReadToEndAsync();
+
+            return GetResponse(_mostUsedWordsService.Get(text, src, target));
         }
 
         public string GetResponse(IList<WordCount> words)

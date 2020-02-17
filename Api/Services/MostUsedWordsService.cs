@@ -7,9 +7,6 @@ namespace MyMostUsedWords.Services
 {
     public class MostUsedWordsService
     {
-        const string sourceLang = "en";
-        const string targetLang = "nl";
-
         ITranslator _translatorService;
 
         public MostUsedWordsService(ITranslator translatorService)
@@ -17,7 +14,7 @@ namespace MyMostUsedWords.Services
             _translatorService = translatorService;
         }
 
-        public List<WordCount> Get(string text)
+        public List<WordCount> Get(string text, string sourceLang = "en", string targetLang = "nl")
         {
             var wordsCountList = new List<WordCount>();
             var wordsInText = text.Split(' ', '\r', '\n');
