@@ -38,7 +38,7 @@ namespace MyMostUsedWords.Infrastructure
             foreach (var line in lines)
             {
                 int index = line.IndexOf(':');
-                dictionary.Add(line.Substring(0, index), line.Substring(index + 1));
+                dictionary.TryAdd(line.Substring(0, index), line.Substring(index + 1));
             }
 
             return dictionary;
