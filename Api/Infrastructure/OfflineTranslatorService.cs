@@ -31,7 +31,7 @@ namespace MyMostUsedWords.Infrastructure
                 var dictionary = LanguageDictionary.FromFile(file);
 
                 if (dictionary.IsSuccess)
-                    _dictionaries.Add(language.ToString(), dictionary.Value);
+                    _dictionaries.TryAdd(language.ToString(), dictionary.Value);
             }
         }
 

@@ -40,7 +40,7 @@ namespace MyMostUsedWords.Controllers
             var result = new StringBuilder();
             for(var i = 0; i < words.Count; i++)
             {   
-                result.Append($"{i + 1}. {words[i].ToString()}\n");
+                result.Append($"{words[i].ToString()}\n");
             }
             return result.ToString();
         }

@@ -132,14 +132,14 @@ namespace Benchmarks
         {
             using (var writer = File.CreateText("json.json"))
             {
-                writer.Write(JsonSerializer.ToJsonString(LanguageDictionary.FromText(jsonString).Value));
+                writer.Write(JsonSerializer.ToJsonString(LanguageDictionary.FromText(jsonString)));
             }
         }
 
         [Benchmark]
         public void CustomFile()
         {
-            var dictionary = LanguageDictionary.FromText(jsonString).Value;
+            var dictionary = LanguageDictionary.FromText(jsonString);
 
             using (var writer = File.CreateText("custom"))
             {

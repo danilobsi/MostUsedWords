@@ -15,21 +15,21 @@ namespace MyMostUsedWords.Infrastructure
 
         public static Result<LanguageDictionary> FromFile(string fileName)
         {
-            var dictionary = FromText(File.ReadAllText(fileName));
-
-            if (dictionary.IsFailure)
-                return dictionary;
-
-            dictionary.Value.Filename = fileName;
-
-            return dictionary;
-        }
-
-        public static Result<LanguageDictionary> FromText(string text)
-        {
             try
             {
-                var dictionary = GetDictionary(text);
+                LanguageDictionary dictionary;
+                var jsonIndex = fileName.IndexOf(".json");
+                var slashIndex = fileName.LastIndexOf('/') + 1;
+                if (jsonIndex != -1)
+                {
+                    dictionary = FromText(File.ReadAllText(fileName));
+                    dictionary.Filename = fileName.Substring(0, jsonIndex);
+                }
+                else
+                {
+                    dictionary = JsonSerializer.Deserialize<LanguageDictionary>(File.ReadAllText(fileName));
+                    dictionary.Filename = fileName;
+                }
 
                 return Result.Ok(dictionary);
             }
@@ -37,6 +37,11 @@ namespace MyMostUsedWords.Infrastructure
             {
                 return Result.Failure<LanguageDictionary>(e.Message);
             }
+        }
+
+        public static LanguageDictionary FromText(string text)
+        {
+            return GetDictionary(text);
         }
 
         private static LanguageDictionary GetDictionary(string text)
@@ -61,15 +66,22 @@ namespace MyMostUsedWords.Infrastructure
             return dictionary;
         }
 
-        public Task Save()
+        public Task<bool> Save()
         {
-            using (var writer = File.CreateText(Filename))
+            try
             {
-                foreach (var keyName in Keys)
-                    writer.WriteLine($"{keyName}:{this[keyName]}");
+                using (var writer = File.CreateText(Filename))
+                {
+                    foreach (var keyName in Keys)
+                        writer.WriteLine($"{keyName}:{this[keyName]}");
+                }
+            }
+            catch
+            {
+                Task.FromResult(false);
             }
 
-            return Task.CompletedTask;
+            return Task.FromResult(true);
         }
     }
 }

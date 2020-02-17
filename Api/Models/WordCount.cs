@@ -20,7 +20,7 @@
 
         public override string ToString()
         {
-            return $"{Description} ({Count}): {Translation}";
+            return $"{Description}:{Translation}";
         }
     }
 }
