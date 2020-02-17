@@ -125,25 +125,25 @@ namespace Benchmarks
             return dictionary;
         }
 
-        [Benchmark]
-        public void JsonFile()
-        {
-            using (var writer = File.CreateText("json.json"))
-            {
-                writer.Write(JsonSerializer.ToJsonString(LanguageDictionary.FromText(jsonString)));
-            }
-        }
+        //[Benchmark]
+        //public void JsonFile()
+        //{
+        //    using (var writer = File.CreateText("json.json"))
+        //    {
+        //        writer.Write(JsonSerializer.ToJsonString(LanguageDictionary.FromText(jsonString)));
+        //    }
+        //}
 
-        [Benchmark]
-        public void CustomFile()
-        {
-            var dictionary = LanguageDictionary.FromText(jsonString);
+        //[Benchmark]
+        //public void CustomFile()
+        //{
+        //    var dictionary = LanguageDictionary.FromText(jsonString);
 
-            using (var writer = File.CreateText("custom"))
-            {
-                foreach(var key in dictionary.Keys)
-                    writer.WriteLine($"{key}:{dictionary[key]}");
-            }
-        }
+        //    using (var writer = File.CreateText("custom"))
+        //    {
+        //        foreach(var key in dictionary.Keys)
+        //            writer.WriteLine($"{key}:{dictionary[key]}");
+        //    }
+        //}
     }
 }
