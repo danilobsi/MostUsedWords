@@ -1,9 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyMostUsedWords.Models;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 using System.IO;
@@ -24,15 +21,12 @@ namespace MyMostUsedWords.Controllers
         }
 
         [HttpPost]
-        //public async Task<IEnumerable<WordCount>> Post()
         public async Task<string> Post()
         {
             var reader = new StreamReader(HttpContext.Request.Body);
             var text = await reader.ReadToEndAsync();
             
             return GetResponse(_mostUsedWordsService.Get(text));
-
-            //return wordsCountList.OrderByDescending(w => w.Count);
         }
 
         public string GetResponse(IList<WordCount> words)
