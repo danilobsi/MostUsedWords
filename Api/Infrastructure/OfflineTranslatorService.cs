@@ -41,6 +41,8 @@ namespace MyMostUsedWords.Infrastructure
                 return string.Empty;
             }
 
+            word = word.ToLower();
+
             var dictionaryName = sourceLang + targetLang;
 
             if (!_dictionaries.TryGetValue(dictionaryName, out var dictionary))
@@ -60,7 +62,7 @@ namespace MyMostUsedWords.Infrastructure
                 return string.Empty;
             }
 
-            dictionary.Add(word, translation);
+            dictionary.Add(word, translation.ToLower());
             dictionary.Save();
 
             _dictionaries[dictionaryName] = dictionary;
