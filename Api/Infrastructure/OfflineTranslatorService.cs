@@ -27,11 +27,10 @@ namespace MyMostUsedWords.Infrastructure
 
             foreach (var file in fileNames)
             {
-                var language = file.AsSpan().Slice(file.LastIndexOf('/') + 1);
                 var dictionary = LanguageDictionary.FromFile(file);
-
+                
                 if (dictionary.IsSuccess)
-                    _dictionaries.TryAdd(language.ToString(), dictionary.Value);
+                    _dictionaries.TryAdd(dictionary.Value.Language, dictionary.Value);
             }
         }
 

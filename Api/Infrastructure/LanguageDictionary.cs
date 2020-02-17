@@ -3,13 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Threading.Tasks;
-using Utf8Json;
 
 namespace MyMostUsedWords.Infrastructure
 {
     public class LanguageDictionary : Dictionary<string, string>
     {
         string Filename { get; set; }
+        public string Language { get; private set; }
 
         LanguageDictionary(int capacity) : base(capacity) { }
 
@@ -18,18 +18,11 @@ namespace MyMostUsedWords.Infrastructure
             try
             {
                 LanguageDictionary dictionary;
-                var jsonIndex = fileName.IndexOf(".json");
                 var slashIndex = fileName.LastIndexOf('/') + 1;
-                if (jsonIndex != -1)
-                {
-                    dictionary = FromText(File.ReadAllText(fileName));
-                    dictionary.Filename = fileName.Substring(0, jsonIndex);
-                }
-                else
-                {
-                    dictionary = JsonSerializer.Deserialize<LanguageDictionary>(File.ReadAllText(fileName));
-                    dictionary.Filename = fileName;
-                }
+                
+                dictionary = FromText(File.ReadAllLines(fileName));
+                dictionary.Filename = fileName;
+                dictionary.Language = fileName.Substring(slashIndex);
 
                 return Result.Ok(dictionary);
             }
@@ -39,15 +32,8 @@ namespace MyMostUsedWords.Infrastructure
             }
         }
 
-        public static LanguageDictionary FromText(string text)
+        private static LanguageDictionary FromText(string[] lines)
         {
-            return GetDictionary(text);
-        }
-
-        private static LanguageDictionary GetDictionary(string text)
-        {
-            var lines = text.Split('\n');
-
             var dictionary = new LanguageDictionary(lines.Length);
             foreach (var line in lines)
             {
