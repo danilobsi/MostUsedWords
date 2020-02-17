@@ -76,9 +76,8 @@ namespace Benchmarks
             var initIndex = 0;
             var dictionary = new Dictionary<string, string>();
 
-            ReadOnlySpan<char> key = ReadOnlySpan<char>.Empty;
-            ReadOnlySpan<char> value = ReadOnlySpan<char>.Empty;
-
+            var key = ReadOnlySpan<char>.Empty;
+            
             for (var index = 0; index < customString.Length; index++)
             {
                 switch (lines[index])
@@ -88,7 +87,7 @@ namespace Benchmarks
                         initIndex = index + 1;
                         break;
                     case '\n':
-                        value = lines.Slice(initIndex, index - initIndex);
+                        var value = lines.Slice(initIndex, index - initIndex);
                         initIndex = index + 1;
                         dictionary.Add(key.ToString(), value.ToString());
                         break;                    
@@ -106,8 +105,7 @@ namespace Benchmarks
             var dictionary = new Dictionary<ReadOnlyMemory<char>, ReadOnlyMemory<char>>();
 
             var key = ReadOnlyMemory<char>.Empty;
-            var value = ReadOnlyMemory<char>.Empty;
-
+            
             for (var index = 0; index < customString.Length; index++)
             {
                 switch (lines.Span[index])
@@ -117,7 +115,7 @@ namespace Benchmarks
                         initIndex = index + 1;
                         break;
                     case '\n':
-                        value = lines.Slice(initIndex, index - initIndex);
+                        var value = lines.Slice(initIndex, index - initIndex);
                         initIndex = index + 1;
                         dictionary.Add(key, value);
                         break;                    
