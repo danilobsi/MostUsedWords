@@ -18,7 +18,7 @@ namespace MyMostUsedWords.Infrastructure
             client = new HttpClient();
         }
 
-        public async Task<string> Translate(string word, string sourceLang, string targetLang)
+        public virtual async Task<string> Translate(string word, string sourceLang, string targetLang)
         {
             var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLang}&tl={targetLang}&dt=t&q={word}";
             var response = await client.GetAsync(url);

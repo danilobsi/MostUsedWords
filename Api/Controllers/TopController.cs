@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using MyMostUsedWords.Services;
 using System.Text;
+using System.Linq;
 
 namespace MyMostUsedWords.Controllers
 {
@@ -20,30 +21,20 @@ namespace MyMostUsedWords.Controllers
             _mostUsedWordsService = mostUsedWordsService;
         }
 
-        [HttpPost]
-        public async Task<string> Post()
-        {
-            var reader = new StreamReader(HttpContext.Request.Body);
-            var text = await reader.ReadToEndAsync();
-            
-            return GetResponse(_mostUsedWordsService.Get(text));
-        }
-
         [HttpPost("{src}/{target}")]
         public async Task<string> Post(string src, string target)
         {
-            var reader = new StreamReader(HttpContext.Request.Body);
-            var text = await reader.ReadToEndAsync();
+            using var reader = new StreamReader(HttpContext.Request.Body);
 
-            return GetResponse(_mostUsedWordsService.Get(text, src, target));
+            return GetResponse(_mostUsedWordsService.Get(reader, src, target));
         }
 
-        public string GetResponse(IList<WordCount> words)
+        public string GetResponse(IEnumerable<KeyValuePair<string, WordCount>> words)
         {
             var result = new StringBuilder();
-            for(var i = 0; i < words.Count; i++)
-            {   
-                result.Append($"{words[i].ToString()}\n");
+            foreach (var word in words)
+            {
+                result.Append($"{word.Value.ToString()}\n");
             }
             return result.ToString();
         }

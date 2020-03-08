@@ -5,14 +5,10 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Infrastructure\Dictionaries\ennl.json" />
-    <Content Remove="Infrastructure\Dictionaries\enpt.json" />
     <Content Remove="Infrastructure\Dictionaries\nlen.json" />
   </ItemGroup>
 
   <ItemGroup>
-    <None Include="Infrastructure\Dictionaries\ennl.json" />
-    <None Include="Infrastructure\Dictionaries\enpt.json" />
     <None Include="Infrastructure\Dictionaries\nlen.json" />
   </ItemGroup>
 

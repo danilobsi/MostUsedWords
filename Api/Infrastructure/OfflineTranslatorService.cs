@@ -30,7 +30,7 @@ namespace MyMostUsedWords.Infrastructure
                 var dictionary = LanguageDictionary.FromFile(file);
                 
                 if (dictionary.IsSuccess)
-                    _dictionaries.TryAdd(dictionary.Value.Language, dictionary.Value);
+                    _dictionaries.TryAdd(dictionary.Value.Language.ToLower(), dictionary.Value);
             }
         }
 
@@ -42,6 +42,8 @@ namespace MyMostUsedWords.Infrastructure
             }
 
             word = word.ToLower();
+            sourceLang = sourceLang.ToLower();
+            targetLang = targetLang.ToLower();
 
             var dictionaryName = sourceLang + targetLang;
 
@@ -56,7 +58,7 @@ namespace MyMostUsedWords.Infrastructure
                 return translation;
             }
 
-            translation = await _googleTranslatorService.Translate(word, sourceLang, targetLang);
+            //translation = await _googleTranslatorService.Translate(word, sourceLang, targetLang);
             if (string.IsNullOrEmpty(translation))
             {
                 return string.Empty;

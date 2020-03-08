@@ -2,7 +2,9 @@
 using MyMostUsedWords.Infrastructure;
 using MyMostUsedWords.Services;
 using Shouldly;
+using System.IO;
 using System.Linq;
+using System.Text;
 using Xunit;
 
 namespace Tests
@@ -23,12 +25,18 @@ namespace Tests
         {
             var text = "My text to test. It will repeat the text word";
 
-            var result = sut.Get(text);
+            // convert string to stream
+            var byteArray = Encoding.UTF8.GetBytes(text);
+            var stream = new MemoryStream(byteArray);
 
-            result.Count.ShouldBe(9);
+            // convert stream to string
+            var textReader = new StreamReader(stream);
+            var result = sut.Get(textReader);
+
+            result.Count().ShouldBe(9);
             var firstWord = result.FirstOrDefault();
-            firstWord.Description.ShouldBe("text");
-            firstWord.Count.ShouldBe(2);
+            firstWord.Value.Description.ShouldBe("text");
+            firstWord.Value.Count.ShouldBe(2);
         }
     }
 }

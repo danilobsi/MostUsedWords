@@ -1,5 +1,6 @@
 ﻿using BenchmarkDotNet.Running;
 using System;
+using System.Diagnostics;
 
 namespace Benchmarks
 {
@@ -7,14 +8,25 @@ namespace Benchmarks
     {
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<MostUsedWordsBenchmark>();
+#if DEBUG
             BenchmarkRunner.Run<StringManipulationBenchmarks>();
-            //var t = new MostUsedWordsBenchmark();
-            //t.JsonDictionary();
-            //t.CustomFormatDictionary();
-            //t.CustomFormatSpanDictionary();
-            //t.CustomFormatIndexDictionary();
-            //t.CustomFormatReadSpanDictionary();
+
+            var t = new MostUsedWordsBenchmark();
+
+            var watch = new Stopwatch();
+            watch.Start();
+            t.GetDictionaryComparison();
+            watch.Stop();
+            Console.WriteLine($"GetDictionaryComparison: {watch.ElapsedMilliseconds}");
+
+            watch = new Stopwatch();
+            watch.Start();
+            t.Get();
+            watch.Stop();
+            Console.WriteLine($"Get: {watch.ElapsedMilliseconds}");
+#else
+            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
+#endif
         }
     }
 }
