@@ -26,22 +26,20 @@ namespace MyMostUsedWords.Services
                 {
                     var ch = textReader.Read();
 
-                    switch (ch)
-                    {
-                        case ' ':
-                        case '\r':
-                        case '\n':
-                            AddWordToDictionary(wordsCountList, wordBuffer, sourceLang, targetLang);
-                            break;
-                        default:
-                            wordBuffer.Add((char)ch);
-                            break;
-                    }
+                    if (IsSpecialCharacter(ch))
+                        AddWordToDictionary(wordsCountList, wordBuffer, sourceLang, targetLang);
+                    else
+                        wordBuffer.Add((char)ch);
                 }
                 AddWordToDictionary(wordsCountList, wordBuffer, sourceLang, targetLang);
             }
 
             return wordsCountList.OrderByDescending(w => w.Value.Count);
+        }
+
+        private static bool IsSpecialCharacter(int ch)
+        {
+            return ch >= 32 && ch <= 47;
         }
 
         private void AddWordToDictionary(Dictionary<string, WordCount> wordsCountList, ArrayBuffer<char> wordBuffer, string sourceLang, string targetLang)
