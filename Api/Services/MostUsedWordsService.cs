@@ -20,24 +20,24 @@ namespace MyMostUsedWords.Services
         {
             var wordsCountList = new Dictionary<string, WordCount>();
 
-            using (var wordBuffer = new ArrayBuffer<char>(200))
+            using (var word = new ArrayBuffer<char>(200))
             {
                 while (textReader.Peek() >= 0)
                 {
                     var ch = textReader.Read();
 
-                    if (IsSpecialCharacter(ch))
-                        AddWordToDictionary(wordsCountList, wordBuffer, sourceLang, targetLang);
+                    if (IsEndOfWordCharacter(ch))
+                        AddWordToDictionary(wordsCountList, word, sourceLang, targetLang);
                     else
-                        wordBuffer.Add((char)ch);
+                        word.Add((char)ch);
                 }
-                AddWordToDictionary(wordsCountList, wordBuffer, sourceLang, targetLang);
+                AddWordToDictionary(wordsCountList, word, sourceLang, targetLang);
             }
 
             return wordsCountList.OrderByDescending(w => w.Value.Count);
         }
 
-        private static bool IsSpecialCharacter(int ch)
+        private static bool IsEndOfWordCharacter(int ch)
         {
             return ch >= 32 && ch <= 47;
         }
