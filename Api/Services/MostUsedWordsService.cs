@@ -39,7 +39,8 @@ namespace MyMostUsedWords.Services
 
         private static bool IsEndOfWordCharacter(int ch)
         {
-            return ch >= 32 && ch <= 47;
+            //return ch >= 32 && ch <= 47;//65 and 122 - alphabet
+            return ch > 122 || ch < 65;
         }
 
         private void AddWordToDictionary(Dictionary<string, WordCount> wordsCountList, ArrayBuffer<char> wordBuffer, string sourceLang, string targetLang)
