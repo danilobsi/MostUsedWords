@@ -41,5 +41,24 @@ namespace MyMostUsedWords.Services
         {
             return ch > 122 || ch < 65;
         }
+
+        private void AddWordToDictionary(Dictionary<string, WordCount> wordsCountList, ArrayBuffer<char> wordBuffer, string sourceLang, string targetLang)
+        {
+            var word = new string(wordBuffer.ToArray());
+            word = word.ToLower();
+
+            if (string.IsNullOrWhiteSpace(word))
+                return;
+
+            if (wordsCountList.ContainsKey(word))
+                wordsCountList[word].Increment();
+            else
+            {
+                var translation = _translatorService.Translate(word, sourceLang, targetLang).Result;
+                wordsCountList.Add(word, new WordCount(word, translation));
+            }
+
+            wordBuffer.Clear();
+        }
     }
 }
