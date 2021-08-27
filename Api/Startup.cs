@@ -7,7 +7,7 @@ using Microsoft.Extensions.Hosting;
 using MyMostUsedWords.Infrastructure;
 using MyMostUsedWords.Services;
 
-namespace WebApplication1
+namespace MyMostUsedWords
 {
     public class Startup
     {
