@@ -6,7 +6,6 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using MyMostUsedWords.Services;
 using System.Text;
-using System.Linq;
 
 namespace MyMostUsedWords.Controllers
 {
