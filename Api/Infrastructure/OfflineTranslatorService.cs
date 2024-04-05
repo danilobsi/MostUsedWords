@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace MyMostUsedWords.Infrastructure
 {
-    public class OfflineTranslatorService : ITranslator
+    public class OfflineTranslatorService : ITranslator, IDisposable
     {
         const string _dictionariesPath = "Infrastructure/Dictionaries/";
 
@@ -28,17 +28,25 @@ namespace MyMostUsedWords.Infrastructure
             foreach (var file in fileNames)
             {
                 var dictionary = LanguageDictionary.FromFile(file);
-                
+
                 if (dictionary.IsSuccess)
                     _dictionaries.TryAdd(dictionary.Value.Language.ToLower(), dictionary.Value);
             }
         }
 
-        public async Task<string> Translate(string word, string sourceLang, string targetLang)
+        public void Dispose()
+        {
+            foreach (var dictionary in _dictionaries.Values)
+            {
+                dictionary.Save();
+            }
+        }
+
+        public Task<string> Translate(string word, string sourceLang, string targetLang)
         {
             if (string.IsNullOrWhiteSpace(word))
             {
-                return string.Empty;
+                return Task.FromResult(string.Empty);
             }
 
             word = word.ToLower();
@@ -53,23 +61,15 @@ namespace MyMostUsedWords.Infrastructure
                 _dictionaries.Add(dictionaryName, dictionary);
             }
 
-            if (dictionary.TryGetValue(word, out var translation))
+            if (dictionary.TryGetValue(word, out var translationTask))
             {
-                return translation;
+                return translationTask;
             }
 
-            //translation = await _googleTranslatorService.Translate(word, sourceLang, targetLang);
-            if (string.IsNullOrEmpty(translation))
-            {
-                return string.Empty;
-            }
+            translationTask = _googleTranslatorService.Translate(word, sourceLang, targetLang);
+            dictionary.Add(word, translationTask);
 
-            dictionary.Add(word, translation.ToLower());
-            dictionary.Save();
-
-            _dictionaries[dictionaryName] = dictionary;
-
-            return translation;
+            return translationTask;
         }
     }
 }

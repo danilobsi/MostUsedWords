@@ -54,7 +54,7 @@ namespace MyMostUsedWords.Services
                 wordsCountList[word].Increment();
             else
             {
-                var translation = _translatorService.Translate(word, sourceLang, targetLang).Result;
+                var translation = _translatorService.Translate(word, sourceLang, targetLang);
                 wordsCountList.Add(word, new WordCount(word, translation));
             }
 

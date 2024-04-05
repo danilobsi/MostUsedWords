@@ -33,7 +33,7 @@ namespace MyMostUsedWords.Controllers
             var result = new StringBuilder();
             foreach (var word in words)
             {
-                result.Append($"{word.Value.ToString()}\n");
+                result.Append($"{word.Value.ToString()}:{word.Value.Count}\n");
             }
             return result.ToString();
         }

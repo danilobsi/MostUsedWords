@@ -29,9 +29,9 @@ namespace MyMostUsedWords
             {
                 options.AllowSynchronousIO = true;
             });
-            services.AddSingleton<MostUsedWordsService>();
-            services.AddSingleton<ITranslator, OfflineTranslatorService>();
-            services.AddSingleton<GoogleTranslatorService>();
+            services.AddScoped<MostUsedWordsService>();
+            services.AddScoped<ITranslator, OfflineTranslatorService>();
+            services.AddScoped<GoogleTranslatorService>();
             services.AddControllers();
         }
 

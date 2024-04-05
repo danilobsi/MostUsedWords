@@ -1,15 +1,18 @@
-﻿namespace MyMostUsedWords.Models
+﻿using System.Threading.Tasks;
+
+namespace MyMostUsedWords.Models
 {
     public class WordCount
     {
+        Task<string> _translationTask;
+        public string Translation => _translationTask.Result;
         public string Description { get; protected set; }
-        public string Translation { get; protected set; }
         public int Count { get; private set; }
 
-        public WordCount(string description, string translation)
+        public WordCount(string description, Task<string> translationTask)
         {
             Description = description;
-            Translation = translation;
+            _translationTask = translationTask;
             Count = 1;
         }
 
@@ -20,7 +23,7 @@
 
         public override string ToString()
         {
-            return $"{Description}:{Translation}";
+            return $"{Description} ({Translation})";
         }
     }
 }

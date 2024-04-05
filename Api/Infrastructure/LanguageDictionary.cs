@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MyMostUsedWords.Infrastructure
 {
-    public class LanguageDictionary : Dictionary<string, string>
+    public class LanguageDictionary : Dictionary<string, Task<string>>
     {
         string Filename { get; set; }
         public string Language { get; private set; }
@@ -38,7 +38,7 @@ namespace MyMostUsedWords.Infrastructure
             foreach (var line in lines)
             {
                 int index = line.IndexOf(':');
-                dictionary.TryAdd(line.Substring(0, index), line.Substring(index + 1));
+                dictionary.TryAdd(line.Substring(0, index), Task.FromResult(line.Substring(index + 1)));
             }
 
             return dictionary;
@@ -59,7 +59,7 @@ namespace MyMostUsedWords.Infrastructure
                 using (var writer = File.CreateText(Filename))
                 {
                     foreach (var keyName in Keys)
-                        writer.WriteLine($"{keyName}:{this[keyName]}");
+                        writer.WriteLine($"{keyName}:{this[keyName].Result}");
                 }
             }
             catch
