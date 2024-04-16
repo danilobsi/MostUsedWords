@@ -21,30 +21,39 @@ namespace MyMostUsedWords.Services
         {
             var wordsDictionary = new Dictionary<string, WordCount>();
 
-            using (var word = new ArrayBuffer<char>(200))
+            using (var wordBuffer = new ArrayBuffer<char>(200))
             {
                 bool ignore = false;
+                bool htmlTag = false;
+                int lastCharacter = 0;
                 while (textReader.Peek() >= 0)
                 {
                     var ch = textReader.Read();
 
                     if (ch == '<')
-                        ignore = true;
-                    if (ch == '>')
-                        ignore = false;
-
-                    if (ignore)
-                        continue;
+                        htmlTag = true;
 
                     if (!ch.IsEndOfWordCharacter())
                     {
-                        word.Add((char)ch);
+                        wordBuffer.Add((char)ch);
                         continue;
                     }
 
-                    AddWordToDictionary(wordsDictionary, word.GetWord(), sourceLang, targetLang);
+                    var word = wordBuffer.GetWord();
+                    if (htmlTag && (word == "style" || word == "script"))
+                    {
+                        ignore = lastCharacter != '/';
+                    }
+
+                    if (!(ignore || htmlTag))
+                        AddWordToDictionary(wordsDictionary, word, sourceLang, targetLang);
+ 
+                    if (ch == '>')
+                        htmlTag = false;
+
+                    lastCharacter = ch;
                 }
-                AddWordToDictionary(wordsDictionary, word.GetWord(), sourceLang, targetLang);
+                AddWordToDictionary(wordsDictionary, wordBuffer.GetWord(), sourceLang, targetLang);
             }
 
             return wordsDictionary.OrderByDescending(w => w.Value.Count);
