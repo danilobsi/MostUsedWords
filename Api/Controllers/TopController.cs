@@ -6,12 +6,15 @@ using Microsoft.AspNetCore.Http;
 using System.IO;
 using MyMostUsedWords.Services;
 using System.Text;
+using System.Net.Http;
+using System;
+using Microsoft.Extensions.Primitives;
 
 namespace MyMostUsedWords.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class TopController: Controller
+    public class TopController : Controller
     {
         MostUsedWordsService _mostUsedWordsService;
 
@@ -28,6 +31,21 @@ namespace MyMostUsedWords.Controllers
             return GetResponse(_mostUsedWordsService.Get(reader, src, target));
         }
 
+        [HttpPost("website/{src}/{target}")]
+        public async Task<string> Get(string src, string target)
+        {
+            using var websiteReader = new StreamReader(HttpContext.Request.Body);
+            var website = await websiteReader.ReadToEndAsync();
+
+            HttpClient client = new()
+            {
+                BaseAddress = new Uri($"https://{website}"),
+            };
+            using var reader = new StreamReader(await client.GetStreamAsync(string.Empty));
+
+            return GetResponse(_mostUsedWordsService.Get(reader, src, target));
+        }
+
         public string GetResponse(IEnumerable<KeyValuePair<string, WordCount>> words)
         {
             var result = new StringBuilder();
@@ -37,5 +55,5 @@ namespace MyMostUsedWords.Controllers
             }
             return result.ToString();
         }
-    }    
+    }
 }

@@ -1,4 +1,5 @@
 ﻿using MyMostUsedWords.Buffers;
+using MyMostUsedWords.Helpers;
 using MyMostUsedWords.Infrastructure;
 using MyMostUsedWords.Models;
 using System.Collections.Generic;
@@ -22,31 +23,35 @@ namespace MyMostUsedWords.Services
 
             using (var word = new ArrayBuffer<char>(200))
             {
+                bool ignore = false;
                 while (textReader.Peek() >= 0)
                 {
                     var ch = textReader.Read();
 
-                    if (IsEndOfWordCharacter(ch))
-                        AddWordToDictionary(wordsDictionary, word, sourceLang, targetLang);
-                    else
+                    if (ch == '<')
+                        ignore = true;
+                    if (ch == '>')
+                        ignore = false;
+
+                    if (ignore)
+                        continue;
+
+                    if (!ch.IsEndOfWordCharacter())
+                    {
                         word.Add((char)ch);
+                        continue;
+                    }
+
+                    AddWordToDictionary(wordsDictionary, word.GetWord(), sourceLang, targetLang);
                 }
-                AddWordToDictionary(wordsDictionary, word, sourceLang, targetLang);
+                AddWordToDictionary(wordsDictionary, word.GetWord(), sourceLang, targetLang);
             }
 
             return wordsDictionary.OrderByDescending(w => w.Value.Count);
         }
 
-        private static bool IsEndOfWordCharacter(int ch)
+        private void AddWordToDictionary(Dictionary<string, WordCount> wordsCountList, string word, string sourceLang, string targetLang)
         {
-            return ch > 122 || ch < 65;
-        }
-
-        private void AddWordToDictionary(Dictionary<string, WordCount> wordsCountList, ArrayBuffer<char> wordBuffer, string sourceLang, string targetLang)
-        {
-            var word = new string(wordBuffer.ToArray());
-            word = word.ToLower();
-
             if (string.IsNullOrWhiteSpace(word))
                 return;
 
@@ -57,8 +62,6 @@ namespace MyMostUsedWords.Services
                 var translation = _translatorService.Translate(word, sourceLang, targetLang);
                 wordsCountList.Add(word, new WordCount(word, translation));
             }
-
-            wordBuffer.Clear();
         }
     }
 }
