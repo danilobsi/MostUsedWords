@@ -10,6 +10,7 @@ namespace MyMostUsedWords.Services
 {
     public class MostUsedWordsService
     {
+        static string[] IgnorableHtmlTags = { "style", "script" };
         protected ITranslator _translatorService;
 
         public MostUsedWordsService(ITranslator translatorService)
@@ -23,35 +24,40 @@ namespace MyMostUsedWords.Services
 
             using (var wordBuffer = new ArrayBuffer<char>(200))
             {
-                bool ignore = false;
-                bool htmlTag = false;
-                int lastCharacter = 0;
-                while (textReader.Peek() >= 0)
+                bool ignoreWord = false;
+                bool isHtmlTag = false;
+                char lastCharacter = '\0';
+                char currentCharacter = '\0';
+
+                for (; textReader.Peek() >= 0; )
                 {
-                    var ch = textReader.Read();
+                    currentCharacter = (char)textReader.Read();
+                    if (currentCharacter == '<')
+                        isHtmlTag = true;
 
-                    if (ch == '<')
-                        htmlTag = true;
-
-                    if (!ch.IsEndOfWordCharacter())
+                    if (currentCharacter.IsValidLetter())
                     {
-                        wordBuffer.Add((char)ch);
+                        wordBuffer.Add(currentCharacter);
                         continue;
                     }
 
                     var word = wordBuffer.GetWord();
-                    if (htmlTag && (word == "style" || word == "script"))
+                    if (isHtmlTag && IgnorableHtmlTags.Contains(word))
                     {
-                        ignore = lastCharacter != '/';
+                        ignoreWord = lastCharacter != '/';
                     }
 
-                    if (!(ignore || htmlTag))
+                    if (!(ignoreWord || isHtmlTag))
+                    {
                         AddWordToDictionary(wordsDictionary, word, sourceLang, targetLang);
- 
-                    if (ch == '>')
-                        htmlTag = false;
+                    }
 
-                    lastCharacter = ch;
+                    if (currentCharacter == '>')
+                    {
+                        isHtmlTag = false;
+                    }
+
+                    lastCharacter = currentCharacter;
                 }
                 AddWordToDictionary(wordsDictionary, wordBuffer.GetWord(), sourceLang, targetLang);
             }

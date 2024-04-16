@@ -49,10 +49,13 @@ namespace MyMostUsedWords.Controllers
         public string GetResponse(IEnumerable<KeyValuePair<string, WordCount>> words)
         {
             var result = new StringBuilder();
+            int wordCount = 0;
             foreach (var word in words)
             {
-                result.Append($"{word.Value.ToString()}:{word.Value.Count}\n");
+                result.AppendLine($"{word.Value.ToString()}: {word.Value.Count}");
+                wordCount += word.Value.Count;
             }
+            result.Append($"Total Word count: {wordCount}");
             return result.ToString();
         }
     }

@@ -20,6 +20,7 @@ namespace MyMostUsedWords.Infrastructure
 
         public virtual async Task<string> Translate(string word, string sourceLang, string targetLang)
         {
+#if !DEBUG
             var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLang}&tl={targetLang}&dt=t&q={word}";
             var response = await client.GetAsync(url);
 
@@ -31,6 +32,7 @@ namespace MyMostUsedWords.Infrastructure
 
                 return translation;
             }
+#endif
             return string.Empty;
         }
     }
