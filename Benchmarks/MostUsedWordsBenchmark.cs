@@ -28,7 +28,7 @@ namespace Benchmarks
 
         public MostUsedWordsBenchmark()
         {
-            var tranlatorService = new OfflineTranslatorService(new GoogleTranslatorServiceFake());
+            var tranlatorService = new OfflineTranslator(new GoogleTranslatorServiceFake());
             for (int i = 0; i < 100; i++)
                 text += "My text to test. It will repeat the text word";
             sut = new MostUsedWordsService(tranlatorService);

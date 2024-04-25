@@ -11,12 +11,12 @@ namespace MyMostUsedWords.Infrastructure
     /// https://translate.googleapis.com/translate_a/single?client=gtx&sl=" + sourceLang + "&tl=" + targetLang + "&dt=t&q=" + encodeURI(sourceText)
     /// https://translate.googleapis.com/translate_a/single?client=gtx&sl=pt&tl=en&dt=t&q=Olá
     /// </summary>
-    public class GoogleTranslatorService : IGoogleTranslatorService
+    public class GoogleTranslator : IGoogleTranslator
     {
         HttpClient _client;
-        ILogger<GoogleTranslatorService> _logger;
+        ILogger<GoogleTranslator> _logger;
 
-        public GoogleTranslatorService(ILogger<GoogleTranslatorService> logger)
+        public GoogleTranslator(ILogger<GoogleTranslator> logger)
         {
             _client = new HttpClient();
             _logger = logger;
@@ -48,7 +48,7 @@ namespace MyMostUsedWords.Infrastructure
         }
     }
 
-    public interface IGoogleTranslatorService : ITranslator
+    public interface IGoogleTranslator : ITranslator
     {
 
     }

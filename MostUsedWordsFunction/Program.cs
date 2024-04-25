@@ -13,8 +13,8 @@ var host = new HostBuilder()
         services.AddApplicationInsightsTelemetryWorkerService();
         services.ConfigureFunctionsApplicationInsights();
         services.AddScoped<MostUsedWordsService>();
-        services.AddScoped<ITranslator, OfflineTranslatorService>();
-        services.AddScoped<IGoogleTranslatorService, GoogleTranslatorService>();
+        services.AddScoped<ITranslator, OfflineTranslator>();
+        services.AddScoped<IGoogleTranslator, GoogleTranslator>();
         services.Configure<KestrelServerOptions>(options =>
         {
             options.AllowSynchronousIO = true;

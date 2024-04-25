@@ -15,7 +15,7 @@ namespace Tests
 
         public MostUsedWordsTests()
         {
-            var tranlatorService = new OfflineTranslatorService(new Mock<IGoogleTranslatorService>().Object);
+            var tranlatorService = new OfflineTranslator(new Mock<IGoogleTranslator>().Object);
 
             sut = new MostUsedWordsService(tranlatorService);
         }

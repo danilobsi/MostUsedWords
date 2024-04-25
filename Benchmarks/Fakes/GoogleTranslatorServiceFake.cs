@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace Benchmarks.Fakes
 {
-    public class GoogleTranslatorServiceFake : GoogleTranslatorService
+    public class GoogleTranslatorServiceFake : GoogleTranslator
     {
-        public GoogleTranslatorServiceFake() : base(new Mock<ILogger<GoogleTranslatorService>>().Object)
+        public GoogleTranslatorServiceFake() : base(new Mock<ILogger<GoogleTranslator>>().Object)
         {
 
         }

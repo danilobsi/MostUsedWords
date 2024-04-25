@@ -5,14 +5,14 @@ using System.Threading.Tasks;
 
 namespace MyMostUsedWords.Infrastructure
 {
-    public class OfflineTranslatorService : ITranslator, IDisposable
+    public class OfflineTranslator : ITranslator, IDisposable
     {
         const string _dictionariesPath = "Infrastructure/Dictionaries/";
 
-        IGoogleTranslatorService _googleTranslatorService;
+        IGoogleTranslator _googleTranslatorService;
         Dictionary<string, LanguageDictionary> _dictionaries;
 
-        public OfflineTranslatorService(IGoogleTranslatorService googleTranslatorService)
+        public OfflineTranslator(IGoogleTranslator googleTranslatorService)
         {
             _googleTranslatorService = googleTranslatorService;
 

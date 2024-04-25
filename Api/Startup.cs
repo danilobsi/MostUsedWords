@@ -30,8 +30,8 @@ namespace MyMostUsedWords
                 options.AllowSynchronousIO = true;
             });
             services.AddScoped<MostUsedWordsService>();
-            services.AddScoped<ITranslator, OfflineTranslatorService>();
-            services.AddScoped<IGoogleTranslatorService, GoogleTranslatorService>();
+            services.AddScoped<ITranslator, OfflineTranslator>();
+            services.AddScoped<IGoogleTranslator, GoogleTranslator>();
             services.AddControllers();
         }
 
