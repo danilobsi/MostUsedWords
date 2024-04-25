@@ -52,7 +52,7 @@ namespace MyMostUsedWords.Infrastructure
             return dictionary;
         }
 
-        public Task<bool> Save()
+        public bool Save()
         {
             try
             {
@@ -61,13 +61,13 @@ namespace MyMostUsedWords.Infrastructure
                     foreach (var keyName in Keys)
                         writer.WriteLine($"{keyName}:{this[keyName].Result}");
                 }
+
+                return true;
             }
             catch
             {
-                Task.FromResult(false);
+                return false;
             }
-
-            return Task.FromResult(true);
         }
     }
 }

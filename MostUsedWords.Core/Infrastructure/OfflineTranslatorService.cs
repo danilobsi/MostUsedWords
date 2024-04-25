@@ -9,10 +9,10 @@ namespace MyMostUsedWords.Infrastructure
     {
         const string _dictionariesPath = "Infrastructure/Dictionaries/";
 
-        GoogleTranslatorService _googleTranslatorService;
+        IGoogleTranslatorService _googleTranslatorService;
         Dictionary<string, LanguageDictionary> _dictionaries;
 
-        public OfflineTranslatorService(GoogleTranslatorService googleTranslatorService)
+        public OfflineTranslatorService(IGoogleTranslatorService googleTranslatorService)
         {
             _googleTranslatorService = googleTranslatorService;
 

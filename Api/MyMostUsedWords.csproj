@@ -5,16 +5,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="Infrastructure\Dictionaries\nlen.json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <None Include="Infrastructure\Dictionaries\nlen.json" />
-  </ItemGroup>
-
-  <ItemGroup>
     <PackageReference Include="CSharpFunctionalExtensions" Version="2.3.0" />
     <PackageReference Include="Utf8Json" Version="1.3.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\MostUsedWords.Core\MostUsedWords.Core.csproj" />
   </ItemGroup>
 
 </Project>

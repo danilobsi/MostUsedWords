@@ -11,11 +11,11 @@ namespace Tests
 {
     public class MostUsedWordsTests
     {
-        MostUsedWordsService sut;
+        readonly MostUsedWordsService sut;
 
         public MostUsedWordsTests()
         {
-            var tranlatorService = new OfflineTranslatorService(new Mock<GoogleTranslatorService>().Object);
+            var tranlatorService = new OfflineTranslatorService(new Mock<IGoogleTranslatorService>().Object);
 
             sut = new MostUsedWordsService(tranlatorService);
         }
@@ -24,6 +24,44 @@ namespace Tests
         public void Get()
         {
             var text = "My text to test. It will repeat the text word";
+
+            // convert string to stream
+            var byteArray = Encoding.UTF8.GetBytes(text);
+            var stream = new MemoryStream(byteArray);
+
+            // convert stream to string
+            var textReader = new StreamReader(stream);
+            var result = sut.Get(textReader);
+
+            result.Count().ShouldBe(9);
+            var firstWord = result.FirstOrDefault();
+            firstWord.Value.Description.ShouldBe("text");
+            firstWord.Value.Count.ShouldBe(2);
+        }
+
+        [Fact]
+        public void GetHTML()
+        {
+            var text = "<html><head><title>My text to test</title></head><body>It will repeat the text word</body></html>";
+
+            // convert string to stream
+            var byteArray = Encoding.UTF8.GetBytes(text);
+            var stream = new MemoryStream(byteArray);
+
+            // convert stream to string
+            var textReader = new StreamReader(stream);
+            var result = sut.Get(textReader);
+
+            result.Count().ShouldBe(9);
+            var firstWord = result.FirstOrDefault();
+            firstWord.Value.Description.ShouldBe("text");
+            firstWord.Value.Count.ShouldBe(2);
+        }
+
+        [Fact]
+        public void GetHTMLwithScriptTag()
+        {
+            var text = "<html><head><title>My text to test</title></head><body><script type=\"text/javascript\">myfunction() {} </script>It will repeat the text word</body></html>";
 
             // convert string to stream
             var byteArray = Encoding.UTF8.GetBytes(text);

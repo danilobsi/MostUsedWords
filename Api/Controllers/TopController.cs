@@ -8,7 +8,6 @@ using MyMostUsedWords.Services;
 using System.Text;
 using System.Net.Http;
 using System;
-using Microsoft.Extensions.Primitives;
 
 namespace MyMostUsedWords.Controllers
 {
@@ -24,7 +23,7 @@ namespace MyMostUsedWords.Controllers
         }
 
         [HttpPost("{src}/{target}")]
-        public async Task<string> Post(string src, string target)
+        public string Post(string src, string target)
         {
             using var reader = new StreamReader(HttpContext.Request.Body);
 

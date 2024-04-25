@@ -29,11 +29,9 @@ namespace MyMostUsedWords.Services
                 char lastCharacter = '\0';
                 char currentCharacter = '\0';
 
-                for (; textReader.Peek() >= 0; )
+                while (textReader.Peek() >= 0)
                 {
                     currentCharacter = (char)textReader.Read();
-                    if (currentCharacter == '<')
-                        isHtmlTag = true;
 
                     if (currentCharacter.IsValidLetter())
                     {
@@ -52,7 +50,11 @@ namespace MyMostUsedWords.Services
                         AddWordToDictionary(wordsDictionary, word, sourceLang, targetLang);
                     }
 
-                    if (currentCharacter == '>')
+                    if (currentCharacter == '<')
+                    {
+                        isHtmlTag = true;
+                    }
+                    else if (currentCharacter == '>')
                     {
                         isHtmlTag = false;
                     }
