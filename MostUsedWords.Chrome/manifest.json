@@ -1,0 +1,16 @@
+{
+    "manifest_version": 3,
+    "name": "Most Popular Words",
+    "description": "This extension gets all the words used on the page and ranks the most popular ones, showing the translation to the language of your preference.",
+    "version": "0.1",
+    "permissions": [
+      "tabs"
+    ],
+    "host_permissions": [
+      "https://mostusedwordsfunction20240423123426.azurewebsites.net/api/*"
+    ],
+    "action": {
+      "default_popup": "home.html",
+      "default_icon": "az-icon.png"
+    }
+  }

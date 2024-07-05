@@ -25,24 +25,24 @@ namespace MyMostUsedWords.Infrastructure
         public virtual async Task<string> Translate(string word, string sourceLang, string targetLang)
         {
 #if !DEBUG
-            try
-            {
-                var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLang}&tl={targetLang}&dt=t&q={word}";
-                var response = await _client.GetAsync(url);
+            //try
+            //{
+            //    var url = $"https://translate.googleapis.com/translate_a/single?client=gtx&sl={sourceLang}&tl={targetLang}&dt=t&q={word}";
+            //    var response = await _client.GetAsync(url);
 
-                if (response.StatusCode == HttpStatusCode.OK)
-                {
-                    var translation = await response.Content.ReadAsStringAsync();
-                    translation = translation.Substring(translation.IndexOf("\"") + 1);
-                    translation = translation.Substring(0, translation.IndexOf("\""));
+            //    if (response.StatusCode == HttpStatusCode.OK)
+            //    {
+            //        var translation = await response.Content.ReadAsStringAsync();
+            //        translation = translation.Substring(translation.IndexOf("\"") + 1);
+            //        translation = translation.Substring(0, translation.IndexOf("\""));
 
-                    return translation;
-                }
-            }
-            catch(Exception ex)
-            {
-                _logger.LogError(ex, "An error has happened.");
-            }
+            //        return translation;
+            //    }
+            //}
+            //catch(Exception ex)
+            //{
+            //    _logger.LogError(ex, "An error has happened.");
+            //}
 #endif
             return string.Empty;
         }
