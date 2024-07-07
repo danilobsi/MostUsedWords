@@ -23,7 +23,7 @@ namespace MyMostUsedWords.Models
 
         public override string ToString()
         {
-            return $"{Description} ({Translation})";
+            return $"{Description}: {Translation} ({Count} {(Count == 1? "time" : "times")})";
         }
     }
 }

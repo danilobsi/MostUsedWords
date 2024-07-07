@@ -2,9 +2,6 @@
 using MyMostUsedWords.Helpers;
 using MyMostUsedWords.Infrastructure;
 using MyMostUsedWords.Models;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
 
 namespace MyMostUsedWords.Services
 {
@@ -50,14 +47,7 @@ namespace MyMostUsedWords.Services
                         AddWordToDictionary(wordsDictionary, word, sourceLang, targetLang);
                     }
 
-                    if (currentCharacter == '<')
-                    {
-                        isHtmlTag = true;
-                    }
-                    else if (currentCharacter == '>')
-                    {
-                        isHtmlTag = false;
-                    }
+                    isHtmlTag = IsHtmlTag(isHtmlTag, currentCharacter);
 
                     lastCharacter = currentCharacter;
                 }
@@ -65,6 +55,20 @@ namespace MyMostUsedWords.Services
             }
 
             return wordsDictionary.OrderByDescending(w => w.Value.Count);
+        }
+
+        private static bool IsHtmlTag(bool isHtmlTag, char currentCharacter)
+        {
+            if (currentCharacter == '<')
+            {
+                return true;
+            }
+            if (currentCharacter == '>')
+            {
+                return false;
+            }
+
+            return isHtmlTag;
         }
 
         private void AddWordToDictionary(Dictionary<string, WordCount> wordsCountList, string word, string sourceLang, string targetLang)

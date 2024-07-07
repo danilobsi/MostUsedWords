@@ -56,7 +56,7 @@ namespace MostUsedWordsFunction
             int wordCount = 0;
             foreach (var word in words)
             {
-                result.AppendLine($"{word.Value.ToString()}: {word.Value.Count}");
+                result.AppendLine(word.Value.ToString());
                 wordCount += word.Value.Count;
             }
             result.Append($"Total Word count: {wordCount}");
